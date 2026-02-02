@@ -37,26 +37,51 @@ Enterprise-grade multimodal semantic search using Azure AI Search with GPT-4o Vi
 
 ### Prerequisites
 
-- Azure subscription
-- Azure CLI installed: `az login`
-- Python 3.9+
-- Access to Azure OpenAI (request at [oai.azure.com/portal](https://oai.azure.com/portal))
+**Required Tools:**
+- ✅ **Azure CLI** - [Install Guide](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli)
+  ```bash
+  curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+  az login --use-device-code
+  ```
+- ✅ **Python 3.9+** - Already included in most systems
+- ✅ **Azure Subscription** - With permissions for AI Search, OpenAI, Storage
+
+**Required Approvals:**
+- ⚠️ **Azure OpenAI Access** - Request at [aka.ms/oai/access](https://aka.ms/oai/access)
+  - Can take days to weeks for approval
+  - Required for GPT-4o embeddings
+  - Blocker for deployment
 
 ### Step 1: Deploy Infrastructure
 
+**Automated Deployment (Recommended):**
+
 ```bash
-# Clone repo
+# Clone and navigate
 cd /home/molt/.openclaw/workspace/azure-ai-search-multimodal
 
+# Run deployment script
+./deploy.sh
+```
+
+The script will:
+- ✅ Check Azure CLI and Python
+- ✅ Verify Azure login
+- ✅ Create resource group
+- ✅ Deploy AI Search + Storage
+- ✅ Generate .env file
+- ✅ Show next steps
+
+**Manual Deployment:**
+
+```bash
 # Set variables
 export LOCATION="swedencentral"
 export RESOURCE_GROUP="rg-ai-search-sweden"
-export SEARCH_SERVICE="search-multimodal-$(openssl rand -hex 4)"
+export SEARCH_SERVICE="search-$(openssl rand -hex 4)"
 
 # Create resource group
-az group create \
-  --name $RESOURCE_GROUP \
-  --location $LOCATION
+az group create --name $RESOURCE_GROUP --location $LOCATION
 
 # Deploy with Bicep
 az deployment group create \
