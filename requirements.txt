@@ -11,6 +11,9 @@ openai==1.58.1
 # Image processing
 Pillow==10.2.0
 
+# Streamlit GUI
+streamlit==1.31.0
+
 # Utilities
 python-dotenv==1.0.1
 requests==2.31.0

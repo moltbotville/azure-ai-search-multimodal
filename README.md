@@ -110,6 +110,23 @@ python scripts/index_documents.py \
 
 ### Step 4: Query
 
+**Option A: Streamlit GUI (Recommended)**
+
+```bash
+# Set environment variables
+export AZURE_SEARCH_SERVICE_NAME=$SEARCH_SERVICE
+export AZURE_SEARCH_QUERY_KEY=<your-query-key>
+export AZURE_OPENAI_ENDPOINT=<your-openai-endpoint>
+export AZURE_OPENAI_API_KEY=<your-openai-key>
+
+# Launch GUI
+streamlit run app.py
+```
+
+Open browser to `http://localhost:8501`
+
+**Option B: Command Line**
+
 ```bash
 # Text search
 python scripts/query.py \
@@ -123,6 +140,29 @@ python scripts/query.py \
   --index-name multimodal-docs \
   --image-query ./my-query-image.jpg
 ```
+
+---
+
+## 🖥️ Streamlit GUI
+
+**Interactive web interface for multimodal search:**
+
+```bash
+# Quick start
+./run_gui.sh
+
+# Or manually
+streamlit run app.py
+```
+
+**Features:**
+- 📝 **Text search** with hybrid/vector/keyword modes
+- 🖼️ **Image search** - Upload images to find similar content
+- ⚙️ **Configuration** - Easy setup via sidebar
+- 📊 **Results display** - Scores, descriptions, and metadata
+- 🎨 **Modern UI** - Clean, responsive design
+
+**Access:** `http://localhost:8501`
 
 ---
 
@@ -165,24 +205,28 @@ python scripts/query.py \
 
 ```
 azure-ai-search-multimodal/
+├── app.py                      # 🖥️ Streamlit GUI
+├── run_gui.sh                  # Quick start script
 ├── infrastructure/
 │   ├── main.bicep              # Main infrastructure
 │   ├── search.bicep            # AI Search service
-│   ├── storage.bicep           # Blob storage
-│   └── openai.bicep            # Azure OpenAI (optional)
+│   └── storage.bicep           # Blob storage
 ├── scripts/
 │   ├── create_index.py         # Create search index
-│   ├── index_documents.py      # Index docs/images
-│   ├── query.py                # Query examples
+│   ├── index_documents.py      # Index docs/images (TODO)
+│   ├── query.py                # CLI query tool
 │   └── utils/
 │       ├── embeddings.py       # GPT-4o Vision embeddings
-│       └── search_client.py    # Azure Search wrapper
+│       └── search_client.py    # Azure Search wrapper (TODO)
 ├── sample-data/
-│   ├── images/                 # Sample images
-│   └── documents/              # Sample text/PDFs
+│   ├── images/                 # Sample images (TODO)
+│   └── documents/              # Sample text/PDFs (TODO)
 ├── requirements.txt
+├── .env.example
 ├── .gitignore
-└── README.md
+├── README.md
+├── DEPLOY.md                   # Deployment guide
+└── COMPARISON.md               # AWS vs Azure
 ```
 
 ---
