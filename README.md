@@ -715,3 +715,55 @@ python3 scripts/create_index.py \
 - **text-embedding-3-large** → Text embeddings (3072d)
 - **gpt-4o** → Image vision (descriptions)
 
+
+---
+
+### Vector Search: "The vector query's 'kind' parameter is not set"
+
+**Issue:**
+```
+InvalidRequestParameter: The vector query's 'kind' parameter is not set. 
+Parameter name: vector.kind
+Code: InvalidVectorQuery
+```
+
+**Cause:** Using dictionary format for vector queries instead of the `VectorizedQuery` class.
+
+**Solution:**
+The Azure Search SDK requires proper `VectorizedQuery` objects:
+
+**Wrong (old way):**
+```python
+results = client.search(
+    vector_queries=[{
+        "vector": embedding,
+        "k_nearest_neighbors": 5,
+        "fields": "content_vector"
+    }]
+)
+```
+
+**Correct (new way):**
+```python
+from azure.search.documents.models import VectorizedQuery
+
+vector_query = VectorizedQuery(
+    vector=embedding,
+    k_nearest_neighbors=5,
+    fields="content_vector"
+)
+
+results = client.search(
+    vector_queries=[vector_query]
+)
+```
+
+**Already fixed in:**
+- `app.py` (Streamlit GUI)
+- `scripts/query.py` (CLI tool)
+
+**If you see this error:**
+1. Update to latest code: `git pull`
+2. Ensure you're importing: `from azure.search.documents.models import VectorizedQuery`
+3. Use `VectorizedQuery()` objects instead of dictionaries
+
