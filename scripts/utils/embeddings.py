@@ -7,6 +7,10 @@ import os
 from openai import AzureOpenAI
 from PIL import Image
 from io import BytesIO
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 
 class MultimodalEmbeddings:

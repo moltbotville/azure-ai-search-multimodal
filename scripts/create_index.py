@@ -5,7 +5,11 @@ Create Azure AI Search index with vector fields for multimodal search.
 
 import argparse
 import os
+from dotenv import load_dotenv
 from azure.search.documents.indexes import SearchIndexClient
+
+# Load environment variables
+load_dotenv()
 from azure.search.documents.indexes.models import (
     SearchIndex,
     SearchField,

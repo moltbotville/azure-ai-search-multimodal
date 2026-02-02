@@ -3,6 +3,10 @@
 Streamlit GUI for Azure AI Search Multimodal Semantic Search
 """
 
+# Load environment variables FIRST (before any other imports)
+from dotenv import load_dotenv
+load_dotenv()
+
 import streamlit as st
 import os
 from io import BytesIO

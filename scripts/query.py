@@ -5,9 +5,13 @@ Query the Azure AI Search multimodal index.
 
 import argparse
 import os
+from dotenv import load_dotenv
 from azure.search.documents import SearchClient
 from azure.core.credentials import AzureKeyCredential
 from scripts.utils.embeddings import get_embeddings_client
+
+# Load environment variables
+load_dotenv()
 
 
 def text_search(search_client: SearchClient, query: str, top: int = 5):
