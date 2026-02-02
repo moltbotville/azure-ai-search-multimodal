@@ -638,6 +638,13 @@ az deployment group cancel \
 
 ## 📚 Resources
 
+**Documentation:**
+- [DEPLOYMENT_ISSUES.md](./DEPLOYMENT_ISSUES.md) - Complete log of deployment issues and solutions
+- [DEPLOY.md](./DEPLOY.md) - Step-by-step deployment guide
+- [COMPARISON.md](./COMPARISON.md) - AWS vs Azure comparison
+- [TOOLS.md](./TOOLS.md) - Required tools and prerequisites
+
+**Azure Documentation:**
 - [Azure AI Search Docs](https://learn.microsoft.com/en-us/azure/search/)
 - [Vector Search Overview](https://learn.microsoft.com/en-us/azure/search/vector-search-overview)
 - [Multimodal Search](https://learn.microsoft.com/en-us/azure/search/multimodal-search-overview)
