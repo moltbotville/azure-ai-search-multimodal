@@ -1,0 +1,16 @@
+# Azure AI Search Multimodal - Python Dependencies
+
+# Azure SDKs
+azure-search-documents==11.6.0b5
+azure-storage-blob==12.19.0
+azure-identity==1.15.0
+
+# Azure OpenAI
+openai==1.58.1
+
+# Image processing
+Pillow==10.2.0
+
+# Utilities
+python-dotenv==1.0.1
+requests==2.31.0
