@@ -89,13 +89,13 @@ def create_multimodal_index(search_service: str, index_name: str, admin_key: str
         SearchField(
             name="content_vector",
             type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
-            vector_search_dimensions=1536,
+            vector_search_dimensions=3072,  # text-embedding-3-large dimensions
             vector_search_profile_name="vector-profile"
         ),
         SearchField(
             name="image_vector",
             type=SearchFieldDataType.Collection(SearchFieldDataType.Single),
-            vector_search_dimensions=1536,
+            vector_search_dimensions=3072,  # text-embedding-3-large dimensions
             vector_search_profile_name="vector-profile"
         ),
         SimpleField(name="created_at", type=SearchFieldDataType.DateTimeOffset),
@@ -113,7 +113,7 @@ def create_multimodal_index(search_service: str, index_name: str, admin_key: str
     print(f"✅ Created index: {result.name}")
     print(f"   Fields: {len(result.fields)}")
     print(f"   Vector fields: content_vector, image_vector")
-    print(f"   Vector dimensions: 1536 (GPT-4o)")
+    print(f"   Vector dimensions: 3072 (text-embedding-3-large)")
     return result
 
 

@@ -22,13 +22,15 @@ class MultimodalEmbeddings:
             api_key=api_key,
             api_version=api_version
         )
-        self.deployment_name = "gpt-4o"  # Your GPT-4o deployment name
+        # Use text-embedding model for embeddings, GPT-4o for vision
+        self.embedding_deployment = os.getenv("AZURE_OPENAI_EMBEDDING_DEPLOYMENT", "text-embedding-3-large")
+        self.vision_deployment = os.getenv("AZURE_OPENAI_DEPLOYMENT_NAME", "gpt-4o")
     
     def encode_text(self, text: str) -> list[float]:
-        """Generate text embeddings using GPT-4o."""
+        """Generate text embeddings using text-embedding-3-large."""
         try:
             response = self.client.embeddings.create(
-                model=self.deployment_name,
+                model=self.embedding_deployment,
                 input=text
             )
             return response.data[0].embedding
@@ -47,7 +49,7 @@ class MultimodalEmbeddings:
             # Note: Azure OpenAI doesn't have a direct image embedding endpoint yet
             # We use GPT-4o Vision to generate a description, then embed that
             response = self.client.chat.completions.create(
-                model=self.deployment_name,
+                model=self.vision_deployment,
                 messages=[
                     {
                         "role": "user",
