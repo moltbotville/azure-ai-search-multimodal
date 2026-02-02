@@ -649,3 +649,69 @@ az deployment group cancel \
 ## License
 
 MIT
+
+---
+
+### Embeddings: "OperationNotSupported - gpt-4o not supported for embeddings"
+
+**Issue:**
+```
+Error code: 400 - {'error': {'code': 'OperationNotSupported', 
+'message': 'The embeddings operation does not work with the specified model, gpt-4o'}}
+```
+
+**Cause:** GPT-4o is a chat/completion model, **not an embeddings model**.
+
+**Solution:**
+Deploy a proper embeddings model:
+
+```bash
+# Deploy text-embedding-3-large
+az cognitiveservices account deployment create \
+  --name openai-fa25fb89 \
+  --resource-group rg-ai-search-sweden \
+  --deployment-name text-embedding-3-large \
+  --model-name text-embedding-3-large \
+  --model-version "1" \
+  --model-format OpenAI \
+  --sku-name "Standard" \
+  --sku-capacity 10
+```
+
+**Update `.env`:**
+```bash
+AZURE_OPENAI_EMBEDDING_DEPLOYMENT=text-embedding-3-large
+```
+
+**Vector dimensions changed:**
+- Old: 1536 (incorrect)
+- New: 3072 (text-embedding-3-large)
+
+**If index exists, recreate it:**
+```bash
+# Delete old index
+python3 << 'SCRIPT'
+from azure.search.documents.indexes import SearchIndexClient
+from azure.core.credentials import AzureKeyCredential
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+client = SearchIndexClient(
+    endpoint=f"https://{os.getenv('AZURE_SEARCH_SERVICE_NAME')}.search.windows.net",
+    credential=AzureKeyCredential(os.getenv('AZURE_SEARCH_ADMIN_KEY'))
+)
+client.delete_index("multimodal-docs")
+print("✅ Deleted old index")
+SCRIPT
+
+# Create new index with 3072 dimensions
+python3 scripts/create_index.py \
+  --search-service $AZURE_SEARCH_SERVICE_NAME \
+  --index-name multimodal-docs
+```
+
+**Model usage:**
+- **text-embedding-3-large** → Text embeddings (3072d)
+- **gpt-4o** → Image vision (descriptions)
+
