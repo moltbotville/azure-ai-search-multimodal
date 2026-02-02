@@ -9,16 +9,15 @@ if [ ! -f .env ]; then
     exit 1
 fi
 
-# Load environment variables
-export $(cat .env | xargs)
-
 # Check dependencies
 if ! command -v streamlit &> /dev/null; then
     echo "📦 Installing dependencies..."
-    pip install -r requirements.txt
+    pip install --break-system-packages -r requirements.txt
 fi
 
 # Launch Streamlit
+# Note: .env is automatically loaded by python-dotenv in app.py
 echo "🚀 Launching Azure AI Search GUI..."
 echo "📍 Open browser to: http://localhost:8501"
+echo ""
 streamlit run app.py
