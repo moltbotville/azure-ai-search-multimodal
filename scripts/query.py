@@ -7,6 +7,7 @@ import argparse
 import os
 from dotenv import load_dotenv
 from azure.search.documents import SearchClient
+from azure.search.documents.models import VectorizedQuery
 from azure.core.credentials import AzureKeyCredential
 from scripts.utils.embeddings import get_embeddings_client
 
@@ -22,13 +23,15 @@ def text_search(search_client: SearchClient, query: str, top: int = 5):
     query_vector = embeddings.encode_text(query)
     
     # Hybrid search: keyword + vector
+    vector_query = VectorizedQuery(
+        vector=query_vector,
+        k_nearest_neighbors=top,
+        fields="content_vector,image_vector"
+    )
+    
     results = search_client.search(
         search_text=query,
-        vector_queries=[{
-            "vector": query_vector,
-            "k_nearest_neighbors": top,
-            "fields": "content_vector,image_vector"
-        }],
+        vector_queries=[vector_query],
         select=["title", "content", "content_type", "file_path", "image_description"],
         top=top
     )
@@ -63,13 +66,15 @@ def image_search(search_client: SearchClient, image_path: str, top: int = 5):
     print(f"   Generated description: {description[:100]}...\n")
     
     # Vector-only search
+    vector_query = VectorizedQuery(
+        vector=image_vector,
+        k_nearest_neighbors=top,
+        fields="content_vector,image_vector"
+    )
+    
     results = search_client.search(
         search_text=None,
-        vector_queries=[{
-            "vector": image_vector,
-            "k_nearest_neighbors": top,
-            "fields": "content_vector,image_vector"
-        }],
+        vector_queries=[vector_query],
         select=["title", "content_type", "file_path", "image_description"],
         top=top
     )

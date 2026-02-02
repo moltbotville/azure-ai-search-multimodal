@@ -13,6 +13,7 @@ from io import BytesIO
 from PIL import Image
 import base64
 from azure.search.documents import SearchClient
+from azure.search.documents.models import VectorizedQuery
 from azure.core.credentials import AzureKeyCredential
 from scripts.utils.embeddings import get_embeddings_client
 
@@ -204,20 +205,22 @@ with tab1:
                     
                     if "Vector Only" in search_mode:
                         search_params["search_text"] = None
-                        search_params["vector_queries"] = [{
-                            "vector": query_vector,
-                            "k_nearest_neighbors": top_k,
-                            "fields": "content_vector,image_vector"
-                        }]
+                        vector_query = VectorizedQuery(
+                            vector=query_vector,
+                            k_nearest_neighbors=top_k,
+                            fields="content_vector,image_vector"
+                        )
+                        search_params["vector_queries"] = [vector_query]
                     elif "Keyword Only" in search_mode:
                         search_params["search_text"] = query
                     else:  # Hybrid
                         search_params["search_text"] = query
-                        search_params["vector_queries"] = [{
-                            "vector": query_vector,
-                            "k_nearest_neighbors": top_k,
-                            "fields": "content_vector,image_vector"
-                        }]
+                        vector_query = VectorizedQuery(
+                            vector=query_vector,
+                            k_nearest_neighbors=top_k,
+                            fields="content_vector,image_vector"
+                        )
+                        search_params["vector_queries"] = [vector_query]
                     
                     # Execute search
                     results = client.search(**search_params)
@@ -281,13 +284,15 @@ with tab2:
                         st.info(f"**Image Analysis:** {description[:200]}...")
                         
                         # Search
+                        vector_query = VectorizedQuery(
+                            vector=image_vector,
+                            k_nearest_neighbors=top_k,
+                            fields="content_vector,image_vector"
+                        )
+                        
                         results = client.search(
                             search_text=None,
-                            vector_queries=[{
-                                "vector": image_vector,
-                                "k_nearest_neighbors": top_k,
-                                "fields": "content_vector,image_vector"
-                            }],
+                            vector_queries=[vector_query],
                             select=["title", "content_type", "file_path", "image_description"],
                             top=top_k
                         )
